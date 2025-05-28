@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Mercedes vs Ferrari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        }
+        .instagram-logo {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .car-option:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .login-box {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div id="app">
+        <!-- Écran de connexion -->
+        <div id="login-screen" class="flex flex-col items-center justify-center min-h-screen p-4">
+            <div class="login-box bg-white rounded-lg p-8 w-full max-w-md">
+                <div class="flex justify-center mb-8">
+                    <i class="fab fa-instagram text-5xl instagram-logo"></i>
+                </div>
+                
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <input type="text" id="username" placeholder="Nom d'utilisateur" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <input type="password" id="password" placeholder="Mot de passe" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <button type="submit" class="w-full gradient-bg text-white py-2 rounded-md font-medium hover:opacity-90 transition">
+                        Se connecter
+                    </button>
+                </form>
+                
+                <div class="flex items-center my-6">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="px-4 text-gray-500 text-sm">OU</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+                
+                <div class="text-center">
+                    <a href="#" class="text-blue-500 text-sm font-medium">Mot de passe oublié ?</a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg p-6 w-full max-w-md mt-4 text-center">
+                <p class="text-gray-700">Vous n'avez pas de compte ? <a href="#" class="text-blue-500 font-medium">Inscrivez-vous</a></p>
+            </div>
+        </div>
+
+        <!-- Écran de vote (caché initialement) -->
+        <div id="vote-screen" class="hidden min-h-screen py-12 px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">Votez pour votre marque préférée</h1>
+                    <div class="flex items-center space-x-4">
+                        <span id="logged-in-user" class="font-medium text-gray-700"></span>
+                        <button id="logout-btn" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Option Mercedes -->
+                    <div class="car-option bg-white rounded-xl overflow-hidden shadow-lg transition cursor-pointer" data-brand="mercedes">
+                        <div class="h-64 bg-gray-100 flex items-center justify-center">
+                            <img src="https://www.mercedes-benz.fr/passengercars/_jcr_content/image.MQ6.2.2x.20211221141933.png" alt="Mercedes" class="max-h-full max-w-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Mercedes</h3>
+                            <p class="text-gray-600 mb-4">Élégance allemande et performance de pointe</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500">Votes: <span id="mercedes-votes">0</span></span>
+                                <button class="vote-btn px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition">
+                                    Voter <i class="fas fa-check ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Option Ferrari -->
+                    <div class="car-option bg-white rounded-xl overflow-hidden shadow-lg transition cursor-pointer" data-brand="ferrari">
+                        <div class="h-64 bg-gray-100 flex items-center justify-center">
+                            <img src="https://www.ferrari.com/fr-FR/auto/sf90-stradale" alt="Ferrari" class="max-h-full max-w-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Ferrari</h3>
+                            <p class="text-gray-600 mb-4">Passion italienne et design emblématique</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500">Votes: <span id="ferrari-votes">0</span></span>
+                                <button class="vote-btn px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+                                    Voter <i class="fas fa-check ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Résultats du vote</h2>
+                    <div class="flex items-center mb-4">
+                        <div class="w-1/2">
+                            <span class="font-medium">Mercedes</span>
+                        </div>
+                        <div class="w-1/2">
+                            <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="mercedes-bar" class="h-full bg-black rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 text-right">
+                            <span id="mercedes-percent">0%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-1/2">
+                            <span class="font-medium">Ferrari</span>
+                        </div>
+                        <div class="w-1/2">
+                            <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="ferrari-bar" class="h-full bg-red-600 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="w-16 text-right">
+                            <span id="ferrari-percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables pour stocker les votes
+            let votes = {
+                mercedes: 0,
+                ferrari: 0
+            };
+            
+            // Variables pour l'utilisateur
+            let currentUser = null;
+            
+            // Éléments du DOM
+            const loginScreen = document.getElementById('login-screen');
+            const voteScreen = document.getElementById('vote-screen');
+            const loginForm = document.getElementById('login-form');
+            const logoutBtn = document.getElementById('logout-btn');
+            const loggedInUserSpan = document.getElementById('logged-in-user');
+            const mercedesVotesSpan = document.getElementById('mercedes-votes');
+            const ferrariVotesSpan = document.getElementById('ferrari-votes');
+            const mercedesBar = document.getElementById('mercedes-bar');
+            const ferrariBar = document.getElementById('ferrari-bar');
+            const mercedesPercent = document.getElementById('mercedes-percent');
+            const ferrariPercent = document.getElementById('ferrari-percent');
+            const voteButtons = document.querySelectorAll('.vote-btn');
+            const carOptions = document.querySelectorAll('.car-option');
+            
+            // Gestion de la connexion
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+                
+                if (username && password) {
+                    // Simulation de connexion réussie
+                    currentUser = username;
+                    
+                    // Envoyer les informations de connexion (simulation)
+                    console.log('Informations de connexion envoyées:');
+                    console.log('Nom d\'utilisateur:', username);
+                    console.log('Mot de passe:', password);
+                    
+                    // Afficher l'écran de vote
+                    loginScreen.classList.add('hidden');
+                    voteScreen.classList.remove('hidden');
+                    loggedInUserSpan.textContent = currentUser;
+                    
+                    // Réinitialiser le formulaire
+                    loginForm.reset();
+                } else {
+                    alert('Veuillez entrer un nom d\'utilisateur et un mot de passe');
+                }
+            });
+            
+            // Gestion de la déconnexion
+            logoutBtn.addEventListener('click', function() {
+                currentUser = null;
+                voteScreen.classList.add('hidden');
+                loginScreen.classList.remove('hidden');
+            });
+            
+            // Gestion des votes
+            voteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const brand = this.closest('.car-option').dataset.brand;
+                    voteForBrand(brand);
+                });
+            });
+            
+            carOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const brand = this.dataset.brand;
+                    voteForBrand(brand);
+                });
+            });
+            
+            function voteForBrand(brand) {
+                if (!currentUser) return;
+                
+                votes[brand]++;
+                updateVoteDisplay();
+                
+                // Envoyer les informations de vote
+                console.log('Nouveau vote enregistré:');
+                console.log('Utilisateur:', currentUser);
+                console.log('Marque choisie:', brand);
+                console.log('Total votes Mercedes:', votes.mercedes);
+                console.log('Total votes Ferrari:', votes.ferrari);
+            }
+            
+            function updateVoteDisplay() {
+                const totalVotes = votes.mercedes + votes.ferrari;
+                
+                mercedesVotesSpan.textContent = votes.mercedes;
+                ferrariVotesSpan.textContent = votes.ferrari;
+                
+                if (totalVotes > 0) {
+                    const mercedesPercentage = Math.round((votes.mercedes / totalVotes) * 100);
+                    const ferrariPercentage = 100 - mercedesPercentage;
+                    
+                    mercedesBar.style.width = `${mercedesPercentage}%`;
+                    ferrariBar.style.width = `${ferrariPercentage}%`;
+                    
+                    mercedesPercent.textContent = `${mercedesPercentage}%`;
+                    ferrariPercent.textContent = `${ferrariPercentage}%`;
+                } else {
+                    mercedesBar.style.width = '0%';
+                    ferrariBar.style.width = '0%';
+                    mercedesPercent.textContent = '0%';
+                    ferrariPercent.textContent = '0%';
+                }
+            }
+            
+            // Simulation de votes initiaux
+            votes.mercedes = 42;
+            votes.ferrari = 58;
+            updateVoteDisplay();
+        });
+    </script>
+</body>
+</html>
